@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "contacts"
+version = "0.1.0"
+description = "Learning Hypermedia Systems"
+authors = ["André Carvalho <alac1984@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "my_blank_webapp"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.101.1"
+sqlmodel = "^0.0.8"
+alembic = "^1.11.3"
+uvicorn = "^0.23.2"
+asyncpg = "^0.28.0"
+gunicorn = "^21.2.0"
+pydantic = {version = "<2.0.0", extras = ["dotenv"]}
+jinja2 = "^3.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pynvim = "^0.4.3"
+pytest = "^7.4.0"
+coverage = "^7.3.0"
+flake8 = "^6.1.0"
+mypy = "^1.5.1"
+black = "^23.7.0"
+pre-commit = "^3.3.3"
+sqlalchemy-stubs = "^0.4"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.11.1"
+pytest-asyncio = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
