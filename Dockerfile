@@ -18,6 +18,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie o restante dos arquivos do seu projeto
 COPY . /app
-
-# Comando para iniciar a aplicação
-CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000"]

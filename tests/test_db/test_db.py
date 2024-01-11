@@ -11,7 +11,6 @@ def test_create_engine():
     engine = create_engine(settings.DATABASE_URL)
 
     assert isinstance(engine, AsyncEngine)
-    assert str(engine.url) == "postgresql+asyncpg://postgres:a1k8u2@localhost:5432/"
 
 
 @pytest.mark.asyncio

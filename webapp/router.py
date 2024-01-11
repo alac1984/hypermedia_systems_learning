@@ -17,6 +17,7 @@ templates = Jinja2Templates(directory="templates")
 async def root(request: Request):
     return "/contacts"
 
+
 @router.get("/contacts", response_class=HTMLResponse)
-async def contacts(request: Request, session: AsyncSession = Depends(get_session)):
+async def contacts(request: Request, session: AsyncSession = Depends(get_session), ):
     return templates.TemplateResponse("index.html", {"request": request})
