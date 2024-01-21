@@ -2,7 +2,9 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio.session import AsyncSession
+
 from db.async_db import get_session
+from api.router import retrieve_contacts
 
 
 router = APIRouter()
@@ -19,5 +21,11 @@ async def root(request: Request):
 
 
 @router.get("/contacts", response_class=HTMLResponse)
-async def contacts(request: Request, session: AsyncSession = Depends(get_session), ):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def contacts(
+    request: Request, session: AsyncSession = Depends(get_session), q: str = ""
+):
+    results = await retrieve_contacts(session, q)
+
+    return templates.TemplateResponse(
+        "contacts.html", {"request": request, "q": q, "results": results}
+    )

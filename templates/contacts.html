@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block content %}
+
+<div class="row m-4">
+  <form action="/contacts" method="get" class="tool-bar">
+    <label for="search">Search Term</label>
+    <input id="search" type="search" name="q" value="{{ q }}"/>
+    <input type="submit" value="Search"/>
+  </form>
+</div>
+<div class ="row m-4">
+  <table>
+    <thead>
+    <tr>
+      <th>First</th> <th>Last</th> <th>Phone</th> <th>Email</th> <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for result in results %}
+    <tr>
+      <td>{{ result.first_name }}</td>
+      <td>{{ result.last_name }}</td>
+      <td>{{ result.phone_number }}</td>
+      <td>{{ result.email }}</td>
+      <td><a href="/contacts/{{ result.id }}/edit">Edit</a>
+        <a href="/contacts/{{ result.id }}">View</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
