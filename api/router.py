@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from db.async_db import get_session
@@ -9,8 +9,6 @@ from models.contact import Contact
 router = APIRouter()
 
 
-# Dummy root endpoint, delete it
 @router.get("/contacts", response_model=list[Contact])
-async def retrieve_contacts(request: Request, session: AsyncSession = Depends(get_session), q: str = ""):
+async def retrieve_contacts(session: AsyncSession = Depends(get_session), q: str = ""):
     return await repo_retrieve_contacts(session, q)
-
