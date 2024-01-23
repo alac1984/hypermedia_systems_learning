@@ -18,3 +18,8 @@ async def repo_retrieve_contacts(session: AsyncSession, q: str) -> list[Contact]
         results = await session.execute(query, {"query": q})
 
     return [Contact(**result) for result in results.mappings()]
+
+
+async def repo_insert_contact(session: AsyncSession, contact: Contact):
+    session.add(contact)
+    await session.commit()
