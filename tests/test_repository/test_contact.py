@@ -14,7 +14,7 @@ async def test_repo_retrieve_contacts(session):
 
 
 @pytest.mark.asyncio
-async def test_insert_contact(session):
+async def test_repo_insert_contact(session):
     contact = Contact(
         first_name="John",
         last_name="McRoll",
