@@ -11,9 +11,13 @@ def create_engine(url: str) -> AsyncEngine:
 
 
 engine = create_engine(settings.DATABASE_URL)
-async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+session_factory = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 async def get_session() -> AsyncSession:  # type: ignore
-    async with async_session() as session:
+    session = session_factory()
+
+    try:
         yield session
+    finally:
+        await session.close()

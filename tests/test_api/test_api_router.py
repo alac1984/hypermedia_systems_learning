@@ -5,23 +5,21 @@ from models.contact import Contact
 
 
 @pytest.mark.asyncio
-async def test_retrieve_contacts_with_q(session):
-    contacts = await retrieve_contacts(session, "Emily")
+async def test_api_retrieve_contacts_with_q(test_session):
+    contacts = await retrieve_contacts(test_session, "Emily")
 
-    assert contacts is not None
     assert len(contacts) == 1
 
 
 @pytest.mark.asyncio
-async def test_retrieve_contacts_without_q(session):
-    contacts = await retrieve_contacts(session)
+async def test_api_retrieve_contacts_without_q(test_session):
+    contacts = await retrieve_contacts(test_session)
 
-    assert contacts is not None
     assert len(contacts) == 2
 
 
 @pytest.mark.asyncio
-async def test_insert_contact(session):
+async def test_api_insert_contact(test_session):
     contact = Contact(
         first_name="John",
         last_name="McRoll",
@@ -33,7 +31,6 @@ async def test_insert_contact(session):
 
     assert contact.id is None
 
-    result = await insert_contact(contact, session)
+    result = await insert_contact(contact, test_session)
 
-    assert result is not None
     assert result.id is not None

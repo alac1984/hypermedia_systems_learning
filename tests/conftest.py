@@ -1,3 +1,5 @@
+from typing import AsyncGenerator
+
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -8,13 +10,24 @@ from models.contact import Contact
 
 
 @pytest_asyncio.fixture(scope="function")
-async def session() -> AsyncSession:
+async def test_engine():
     engine = create_engine(
         "postgresql+asyncpg://postgres:testpassword@localhost:5433/postgres"
     )
-    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-    async with async_session() as test_session:
+    return engine
+
+
+@pytest_asyncio.fixture(scope="function")
+async def test_session(test_engine) -> AsyncGenerator:
+    session_factory = sessionmaker(
+        bind=test_engine, class_=AsyncSession, expire_on_commit=False
+    )
+
+    session = session_factory()
+
+    try:
+        # Set up test data
         contact1 = Contact(
             first_name="Emily",
             last_name="Smith",
@@ -33,10 +46,11 @@ async def session() -> AsyncSession:
             phone_number="5585998776655",
         )
 
-        test_session.add_all([contact1, contact2])
-        await test_session.commit()
-        yield test_session
-        statement = delete(Contact)
-        await test_session.execute(statement)
-        await test_session.commit()
-        await test_session.close()
+        session.add_all([contact1, contact2])
+        await session.commit()
+        yield session
+    finally:
+        stmt1 = delete(Contact)  # type: ignore
+        await session.execute(stmt1)
+        await session.commit()
+        await session.close()

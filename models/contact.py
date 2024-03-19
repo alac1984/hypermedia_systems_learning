@@ -10,10 +10,10 @@ class Contact(Base, table=True):
     first_name: str
     last_name: str
     email: EmailStr = Field(sa_column=Column(String))
-    gender: str
-    ip_address: IPvAnyAddress = Field(sa_column=Column(String))
+    gender: None | str
+    ip_address: None | IPvAnyAddress = Field(sa_column=Column(String))
     phone_number: PhoneNumber = Field(sa_column=Column(String))
 
     __table_args__ = (
-       Index('idx_contact_first_name', 'first_name', postgresql_using='gin'),
+        Index("idx_contact_first_name", "first_name", postgresql_using="gin"),
     )

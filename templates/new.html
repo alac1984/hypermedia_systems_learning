@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block content %}
+<div class="row m-4">
+  <form id="new" action="/contacts/new" method="post">
+    <fieldset>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <legend>Contact Values</legend>
+            {% if error %}
+              <div class="alert alert-success" role="alert">{{error}}</div>
+            {% endif %}
+            {% if message%}
+              <div class="alert alert-success" role="alert">{{message}}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="email">Email</label>
+          </div>
+          {% if contact %}
+          <div class="col">
+            <input name="email" id="email" type="email" value="{{ contact.email }}">
+          </div>
+          {% else %}
+          <div class="col">
+            <input name="email" id="email" type="email" placeholder="Email" value="">
+          </div>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="first_name">First Name</label>
+          </div>
+          {% if contact %}
+          <div class="col">
+            <input name="first_name" id="first_name" type="input" value="{{ contact.first_name}}">
+          </div>
+          {% else %}
+          <div class="col">
+            <input name="first_name" id="first_name" type="input" placeholder="First name" value="">
+          </div>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="last_name">Last Name</label>
+          </div>
+          {% if contact %}
+          <div class="col">
+            <input name="last_name" id="last_name" type="text" placeholder="Last Name" value="{{ contact.last_name or '' }}">
+          </div>
+          {% else %}
+          <div class="col">
+              <input name="last_name" id="last_name" type="input" placeholder="Last name" value="">
+          </div>
+          {% endif %}
+          </div>
+        <div class="row">
+          <div class="col">
+            <label for="phone">Phone</label>
+          </div>
+          {% if contact %}
+          <div class="col">
+            <input name="phone" id="phone" type="text" placeholder="Phone" value="{{ contact.phone_number or '' }}">
+          </div>
+          {% else %}
+          <div class="col">
+              <input name="phone" id="phone" type="input" placeholder="Phone Number" value="">
+          </div>
+          {% endif %}
+          </div>
+        <button>Save</button>
+      </div>
+    </fieldset>
+  </form>
+  <a class="mt-3" href="/contacts">Back</a>
+</div>
+{% endblock %}
