@@ -7,7 +7,7 @@ settings = AppSettings()  # type: ignore
 
 
 def create_engine(url: str) -> AsyncEngine:
-    return create_async_engine(url, echo=True, future=True)
+    return create_async_engine(url, future=True)
 
 
 engine = create_engine(settings.DATABASE_URL)

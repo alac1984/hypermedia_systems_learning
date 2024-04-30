@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Request, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -7,6 +8,8 @@ from db.async_db import get_session
 from api.router import retrieve_contacts as api_retrieve_contacts
 from api.router import insert_contact as api_insert_contacts
 from models.contact import Contact
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 router = APIRouter()
@@ -23,6 +26,7 @@ async def root():
 async def retrieve_contacts(
     request: Request, session: AsyncSession = Depends(get_session), q: str = ""
 ):
+    logging.debug("Passei aqui")
     results = await api_retrieve_contacts(session, q)
 
     return templates.TemplateResponse(
@@ -37,7 +41,7 @@ async def show_contact_form(request: Request):
     )
 
 
-@router.post("/contacts/new", response_class=HTMLResponse)
+@router.post("/contacts/new", response_class=RedirectResponse)
 async def insert_contact(
     request: Request,
     email: str = Form(...),
@@ -54,9 +58,9 @@ async def insert_contact(
         message = "Contact saved successfully!"
 
         return templates.TemplateResponse(
-            request, "new.html", {"contact": inserted, "message": message}
+            request, "contacts.html", {"contact": inserted, "message": message}
         )
     except Exception as e:
         return templates.TemplateResponse(
-            request, "new.html", {"contact": contact, "error": repr(e)}
+            request, "contacts.html", {"contact": contact, "error": repr(e)}
         )

@@ -1,10 +1,14 @@
+import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import text
 
 from models.contact import Contact
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 async def repo_retrieve_contacts(session: AsyncSession, q: str) -> list[Contact]:
+    logging.debug("session: " + str(session))
     if q == "":
         # If a query param is not provided, return all contacts
         query = text("select * from contact order by first_name")

@@ -1,16 +1,19 @@
 from typing import AsyncGenerator
 
+import pytest
 import pytest_asyncio
+from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import delete
 
-from db.async_db import create_engine
+from db.async_db import create_engine, get_session
 from models.contact import Contact
+from app.main import app
 
 
-@pytest_asyncio.fixture(scope="function")
-async def test_engine():
+@pytest.fixture(scope="function")
+def test_engine():
     engine = create_engine(
         "postgresql+asyncpg://postgres:testpassword@localhost:5433/postgres"
     )
@@ -19,12 +22,17 @@ async def test_engine():
 
 
 @pytest_asyncio.fixture(scope="function")
-async def test_session(test_engine) -> AsyncGenerator:
+async def get_test_factory(test_engine):
     session_factory = sessionmaker(
         bind=test_engine, class_=AsyncSession, expire_on_commit=False
     )
 
-    session = session_factory()
+    yield session_factory
+
+
+@pytest_asyncio.fixture(scope="function")
+async def test_session(get_test_factory) -> AsyncGenerator:
+    session = get_test_factory()
 
     try:
         # Set up test data
@@ -54,3 +62,10 @@ async def test_session(test_engine) -> AsyncGenerator:
         await session.execute(stmt1)
         await session.commit()
         await session.close()
+
+
+@pytest_asyncio.fixture(scope="function")
+async def test_client(test_session, get_test_factory) -> AsyncGenerator:
+    app.dependency_overrides[get_session] = get_test_factory
+
+    yield TestClient(app)
